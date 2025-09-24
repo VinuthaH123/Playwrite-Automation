@@ -2,7 +2,7 @@ require('dotenv').config();
 const { test, expect } = require('@playwright/test');
 
 test('Wikipedia login', async ({ page }) => {
-  await page.goto('https://www.wikipedia.org');
+  await page.goto('https://www.wikipedia.org');s
 
   await page.click('a#js-link-box-en');
   await page.click('text=Log in');
@@ -12,17 +12,17 @@ test('Wikipedia login', async ({ page }) => {
   await page.fill('input[name="wpName"]', process.env.WIKI_USERNAME);
   await page.fill('input[name="wpPassword"]', process.env.WIKI_PASSWORD);
 
-  await page.click('button[name="wploginattempt"]');
+  await page.click('button[name="wploginattempt"]')
 
 });
 
 test('Wikipedia UI tests', async ({ page }) => {
-  // 1. Navigate to Wikipedia's homepage
-  await page.goto('https://www.wikipedia.org/');
-  await page.click('#js-link-box-en'); // English 
+  
+  await page.goto('https://www.wikipedia.org/')
+  await page.click('#js-link-box-en')
 
-  // 2. Assert there are less than 7,000,000 articles in English
-  const articleCountText = await page.locator('#articlecount a').nth(1).textContent();
+  
+  const articleCountText = await page.locator('#articlecount a').nth(1).textContent()
   const articleCount = parseInt(articleCountText.replace(/[^0-9]/g, ''), 10);
   expect(articleCount).toBeLessThan(7000000);
 
@@ -61,14 +61,8 @@ test('Verify latest Wikipedia edit by Worstbull', async ({ page }) => {
     const latestEditor = await page.textContent('.mw-userlink');
   expect(latestEditor?.toLowerCase()).toContain('maxeto0910');
 
-  // Step 4: Get the username of the most recent edit
-  //const latestUser = await page.locator('.mw-changeslist li .mw-userlink').first().textContent();
-
-  // Step 5: Assert it was "Worstbull"
-  //expect(latestEditor?.trim()).toBe('Maxeto0910');
-  //expect(latestEditor?.toLowerCase()).toBe('Maxeto0910');
-//const latestEditor = await page.locator('.mw-changeslist li .mw-userlink').first().textContent();
-expect(latestEditor?.trim().toLowerCase()).toBe('maxeto0910'.toLowerCase());
+  
+  expect(latestEditor?.trim().toLowerCase()).toBe('maxeto0910'.toLowerCase());
 
 });
 
