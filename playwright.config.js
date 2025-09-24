@@ -3,6 +3,8 @@ import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -18,6 +20,8 @@ dotenv.config();
 export default defineConfig({  timeout: 900000,  // 90 seconds for all tests
   use: {
     viewport: { width: 1280, height: 720 },
+      reporter: [['list'], ['allure-playwright']],
+
 
   },
 
@@ -33,13 +37,13 @@ export default defineConfig({  timeout: 900000,  // 90 seconds for all tests
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  use: {
+  //use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-  },
+   // trace: 'on-first-retry',
+  //},
 
   /* Configure projects for major browsers */
   projects: [
@@ -47,7 +51,7 @@ export default defineConfig({  timeout: 900000,  // 90 seconds for all tests
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-
+/*
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
