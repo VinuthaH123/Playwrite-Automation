@@ -1,0 +1,44 @@
+name: Playwright Scroll Spec (Headless Chrome)
+
+on:
+  push:
+    branches: [ "main" ]   # Only trigger on main branch
+
+jobs:
+  run-scroll-spec:
+    runs-on: ubuntu-latest
+
+    # Ensure only one workflow runs per branch; cancel previous in-progress runs
+    concurrency:
+      group: playwright-scroll-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Step 3: Install dependencies and Playwright browsers
+      - name: Install dependencies
+        run: |
+          npm install
+          npx playwright install --with-deps
+
+      # Step 4: Run only scroll.spec.js
+      - name: Run Scroll Spec
+        run: npx playwright test tests/blank_password.spec.js --project=chromium --workers=1 --headed=false --reporter=html
+        continue-on-error: true  # ensures report upload even if test fails
+
+      # Step 5: Upload HTML report
+      - name: Upload Playwright HTML Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-scroll-report
+          path: playwright-report
