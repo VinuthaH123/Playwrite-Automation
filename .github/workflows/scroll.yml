@@ -1,0 +1,39 @@
+name: Playwright Login Test (Headless Chrome)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  run-login-spec:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repo
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # Step 2: Setup Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    # Step 3: Install dependencies and browsers
+    - name: Install dependencies
+      run: |
+        npm install
+        npx playwright install chromium --with-deps
+
+    # Step 4: Run login.spec.js in headless Chrome
+    - name: Run Login Spec (Headless Chrome)
+      run: npx playwright test tests/scroll.spec.js --project=chromium --headed=false --reporter=html --worker
+    # Step 5: Upload HTML report
+    - name: Upload Playwright HTML Report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: playwright-login-report
+        path: playwright-report
