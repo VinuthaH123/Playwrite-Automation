@@ -1,0 +1,27 @@
+name: Playwright Single Spec (Headless Chrome)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  run-single-spec:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: playwright-single-spec-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with: node-version: '18'
+      - run: |
+          npm install
+          npx playwright install --with-deps
+      - run: npx playwright test tests/blank_password.spec.js --project=chromium --workers=1 --reporter=html
+        continue-on-error: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report
